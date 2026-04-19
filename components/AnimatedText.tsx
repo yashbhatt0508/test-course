@@ -19,7 +19,7 @@ export const AnimatedText = ({ text, className = "", as: Component = "span" }: {
       opacity: 1,
       filter: "blur(0px)",
       transition: {
-        type: "tween",
+        type: "tween" as const,
         duration: 0.5,
       },
     },
