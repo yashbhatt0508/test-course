@@ -2,19 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
+import { usePathname } from "next/navigation";
+import { Menu, X, ShoppingCart } from "lucide-react";
 
 const NAV_LINKS = [
   { name: "Home", href: "/" },
-  { name: "Courses", href: "/courses" },
+  { name: "Test Bundles", href: "/courses" },
+  { name: "Free Test", href: "/courses", isHighlighted: true },
   { name: "FAQ", href: "/faq" },
-  { name: "Contact Us", href: "/contact" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isHome = pathname === "/";
+  // If we are not on the home page, the navbar should always appear as "scrolled"
+  const isNavSolid = !isHome || isScrolled;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,87 +32,112 @@ export default function Navigation() {
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/90 backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"
-      }`}
-    >
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between">
-          
-          {/* Logo with Tooltip */}
-          <div className="group relative flex items-center">
-            <Link href="/" className={`text-3xl font-serif font-bold ${isScrolled ? "text-primary" : "text-white drop-shadow-md dark:text-primary"}`}>
+    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+      {/* Background Blur Layer */}
+      <div 
+        className={`absolute inset-0 transition-all duration-300 -z-10 ${
+          isNavSolid 
+            ? "bg-white/70 backdrop-blur-md shadow-sm" 
+            : "bg-transparent"
+        }`} 
+      />
+
+      <div className={`relative z-10 transition-all duration-300 ${isNavSolid ? "py-4" : "py-6"}`}>
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="flex items-center justify-between">
+            
+            {/* Logo */}
+            <Link href="/" className={`text-3xl font-serif font-bold ${isNavSolid ? "text-[#0F172A]" : "text-white drop-shadow-md"}`}>
               EduCraft
             </Link>
-            {/* Tooltip */}
-            <div className="absolute left-0 bottom-[-32px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-foreground text-background text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap">
-              EduCraft Course Portal
-            </div>
-          </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {NAV_LINKS.map((link) => (
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-8">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={
+                    link.isHighlighted
+                      ? `transition-colors text-base font-medium px-4 py-1.5 rounded-full ${
+                          isNavSolid
+                            ? "bg-[#6366F1]/10 text-[#6366F1] hover:bg-[#6366F1]/20"
+                            : "bg-white/20 text-white hover:bg-white/30 border border-white/30"
+                        }`
+                      : `transition-colors text-base font-medium tracking-wide ${
+                          isNavSolid 
+                            ? "text-[#334155] hover:text-[#6366F1]" 
+                            : "text-neutral-200 hover:text-white drop-shadow-md"
+                        }`
+                  }
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Actions */}
+            <div className="hidden md:flex items-center space-x-6">
+              <div className="flex items-center gap-4">
+                <div className="relative group cursor-pointer">
+                  <ShoppingCart size={24} className={`transition-colors ${isNavSolid ? "text-[#0F172A] hover:text-[#6366F1]" : "text-white hover:text-gray-200 drop-shadow-md"}`} />
+                  <span className="absolute -top-1.5 -right-2 bg-[#6366F1] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    2
+                  </span>
+                </div>
+              </div>
               <Link
-                key={link.name}
-                href={link.href}
-                className={`transition-colors text-sm font-medium tracking-wide ${
-                  isScrolled 
-                    ? "text-secondary hover:text-primary" 
-                    : "text-neutral-200 hover:text-white drop-shadow-md dark:text-secondary dark:hover:text-primary"
-                }`}
+                href="#signin"
+                className="px-6 py-2 rounded-full bg-[#6366F1] text-white transition-all duration-300 hover:scale-105 hover:bg-indigo-600 hover:shadow-lg text-base font-medium"
               >
-                {link.name}
+                Sign In
               </Link>
-            ))}
-          </nav>
+            </div>
 
-          {/* Actions */}
-          <div className={`hidden md:flex items-center space-x-5 ${isScrolled ? "text-primary" : "text-white dark:text-primary drop-shadow-md"}`}>
-            <ThemeToggle />
-            <Link
-              href="#signin"
-              className="px-6 py-2.5 rounded-full bg-cta text-background transition-all duration-300 hover:bg-cta-hover hover:scale-105 hover:shadow-lg text-sm font-medium"
-            >
-              Sign In
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className={`flex items-center space-x-4 md:hidden ${isScrolled ? "text-primary" : "text-white dark:text-primary drop-shadow-md"}`}>
-            <ThemeToggle />
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-1 focus:outline-none focus:ring-2 border-transparent focus:ring-cta rounded hover:bg-alt-bg transition-colors"
-            >
-              {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
-            </button>
+            {/* Mobile Menu Button */}
+            <div className={`flex items-center space-x-4 md:hidden ${isNavSolid ? "text-[#0F172A]" : "text-white drop-shadow-md"}`}>
+              <div className="relative group cursor-pointer mr-2">
+                <ShoppingCart size={24} />
+                <span className="absolute -top-1.5 -right-2 bg-[#6366F1] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  2
+                </span>
+              </div>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-1 focus:outline-none focus:ring-2 border-transparent focus:ring-[#6366F1] rounded transition-colors"
+              >
+                {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu Dropdown */}
       <div
-        className={`md:hidden absolute top-full left-0 right-0 bg-background border-t border-alt-bg shadow-xl transition-all duration-300 overflow-hidden ${
-          isMobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+        className={`md:hidden absolute top-full left-0 right-0 bg-[#FFFFFF] border-t border-[#E2E8F0] shadow-xl transition-all duration-300 overflow-hidden ${
+          isMobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="flex flex-col px-6 py-6 space-y-6">
+        <div className="flex flex-col px-6 py-6 space-y-6 relative z-10">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className="text-secondary hover:text-primary transition-colors text-lg font-medium"
+              className={
+                link.isHighlighted
+                  ? "text-[#6366F1] bg-[#6366F1]/10 px-4 py-2 rounded-full w-fit hover:bg-[#6366F1]/20 transition-colors text-lg font-medium"
+                  : "text-[#334155] hover:text-[#6366F1] transition-colors text-lg font-medium"
+              }
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {link.name}
             </Link>
           ))}
-          <div className="pt-4 border-t border-alt-bg">
+          <div className="pt-4 border-t border-[#E2E8F0]">
             <Link
               href="#signin"
-              className="block text-center w-full px-5 py-3.5 rounded-full bg-cta text-background transition-all duration-300 hover:bg-cta-hover font-medium text-lg"
+              className="block text-center w-full px-5 py-3.5 rounded-full bg-[#6366F1] text-white transition-all duration-300 hover:bg-indigo-600 font-medium text-lg"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Sign In

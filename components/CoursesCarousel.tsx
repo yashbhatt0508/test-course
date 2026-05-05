@@ -1,121 +1,95 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Calculator, BookOpen, BrainCircuit } from "lucide-react";
+import { Calculator, BookOpen, BrainCircuit } from "lucide-react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 const COURSES = [
   {
     id: 1,
-    title: "Advanced Mathematics",
-    description: "Master calculus, algebra, and geometry through highly interactive, problem-solving challenges tailored to logic.",
+    title: "Mathematics",
+    description: "Core concepts aligned with school curriculum.",
     icon: Calculator,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
+    bandColor: "bg-[#6366F1]",
+    textColor: "text-[#6366F1]",
   },
   {
     id: 2,
-    title: "English Literature",
-    description: "Enhance your critical reading and writing skills by exploring classical and modern literary masterpieces.",
+    title: "English",
+    description: "Enhance reading comprehension and writing skills.",
     icon: BookOpen,
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10",
+    bandColor: "bg-[#14B8A6]",
+    textColor: "text-[#14B8A6]",
   },
   {
     id: 3,
-    title: "Critical Thinking",
-    description: "Develop profound analytical skills. Learn how to construct, deconstruct, and evaluate complex arguments efficiently.",
+    title: "Reasoning",
+    description: "Develop strong analytical and logical thinking.",
     icon: BrainCircuit,
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
+    bandColor: "bg-[#818CF8]",
+    textColor: "text-[#818CF8]",
   },
 ];
 
 export default function CoursesCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(true);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % COURSES.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? COURSES.length - 1 : prev - 1));
-  };
-
   return (
-    <section id="courses" className="py-24 bg-[--alt-bg] overflow-hidden relative">
+    <section id="courses" className="py-24 bg-[#F8FAFC]">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="flex justify-between items-end mb-12">
-          <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-[--primary] mb-6">
-              Explore Our Curricula
-            </h2>
-            <p className="text-[--secondary] text-lg md:text-xl">
-              Immerse yourself in expertly curated courses tailored to maximize your potential.
-            </p>
-          </div>
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <motion.h2 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-serif font-bold text-[#0F172A] mb-6"
+          >
+            What Your Child Will Practice
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-[#334155] text-lg"
+          >
+            Focused practice in Mathematics, Reasoning, and English — aligned with school learning, with timed tests and detailed performance insights.
+          </motion.p>
         </div>
 
-        {/* Carousel Container */}
-        <div className="relative w-full">
-          <div
-            className="flex flex-nowrap transition-transform duration-[600ms] ease-in-out md:!transform-none"
-            style={{
-              transform: isMobile ? `translateX(-${currentIndex * 100}%)` : "none",
-            }}
-          >
-            {COURSES.map((course) => {
-              const Icon = course.icon;
-              return (
-                <div
-                  key={course.id}
-                  className="w-full md:w-1/3 shrink-0 px-3 md:px-4"
-                >
-                  <div className="bg-[--background] rounded-2xl p-8 h-full flex flex-col transition-all duration-[400ms] hover:scale-[1.02] hover:shadow-2xl border border-transparent dark:border-white/5">
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 ${course.bg} ${course.color}`}>
-                      <Icon size={32} />
-                    </div>
-
-                    <h3 className="text-2xl font-serif font-bold text-[--primary] mb-4">
-                      {course.title}
-                    </h3>
-
-                    <p className="text-[--secondary] mb-8 flex-grow leading-relaxed text-base">
-                      {course.description}
-                    </p>
-
-                    <button className="mt-auto group flex items-center justify-center space-x-2 w-full py-3.5 rounded-xl bg-transparent border-2 border-[--cta] text-[--cta] font-semibold transition-all duration-300 hover:bg-[--cta] hover:text-[--background]">
-                      <span>Explore Course</span>
-                      <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {COURSES.map((course) => {
+            const Icon = course.icon;
+            return (
+              <div
+                key={course.id}
+                className="group relative bg-white rounded-2xl border border-[#E2E8F0] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md flex flex-col"
+              >
+                {/* Top colored band */}
+                <div className={`h-2 w-full rounded-t-2xl ${course.bandColor}`} />
+                
+                <div className="p-6 flex flex-col h-full">
+                  <div className={`w-12 h-12 mb-5 rounded-xl bg-opacity-10 flex items-center justify-center ${course.textColor} bg-current`}>
+                    <Icon size={24} className="opacity-100" />
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Navigation Arrows for Mobile Only */}
-        <div className="flex md:hidden justify-center space-x-6 mt-10">
-          <button
-            onClick={prevSlide}
-            className="p-3.5 rounded-full bg-[--background] text-[--cta] shadow-md hover:scale-105 transition-transform"
-          >
-            <ChevronLeft size={24} />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="p-3.5 rounded-full bg-[--background] text-[--cta] shadow-md hover:scale-105 transition-transform"
-          >
-            <ChevronRight size={24} />
-          </button>
+                  <h3 className="text-2xl font-serif font-semibold text-[#0F172A] mb-3">
+                    {course.title}
+                  </h3>
+
+                  <p className="text-[#334155] mb-6 flex-grow">
+                    {course.description}
+                  </p>
+
+                  <Link 
+                    href={`/courses?subject=${course.title}`}
+                    className="mt-auto text-[#6366F1] font-semibold flex items-center gap-1 group-hover:text-indigo-700 transition-colors"
+                  >
+                    View Tests <span className="transform transition-transform group-hover:translate-x-1">→</span>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
       </div>

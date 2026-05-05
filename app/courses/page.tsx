@@ -1,212 +1,268 @@
 "use client";
 
 import { useState } from "react";
-import { Calculator, BookOpen, BrainCircuit, Code, Globe, Beaker, User, Clock, ChevronRight } from "lucide-react";
+import { Calculator, BookOpen, Brain, FileText, GraduationCap } from "lucide-react";
 
-const ALL_COURSES = [
+const MATHS_IMG = "https://images.unsplash.com/photo-1596495578065-6e0763fa1178?w=400&q=80";
+const ENGLISH_IMG = "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=80";
+const REASONING_IMG = "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&q=80";
+
+const FREE_TESTS = [
   {
-    id: 1,
-    title: "Advanced Mathematics",
-    description: "Master calculus, algebra, and geometry through highly interactive challenges.",
+    id: "f1",
+    subject: "Mathematics",
+    title: "Maths Free Test",
+    description: "Try a full-length mock test matching the school curriculum.",
     icon: Calculator,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
-    category: "Math",
-    difficulty: "Advanced",
-    duration: "12 Weeks",
-    instructor: "Dr. Alan Turing"
+    image: MATHS_IMG,
   },
   {
-    id: 2,
-    title: "English Literature",
-    description: "Enhance your critical reading by exploring classical and modern masterpieces.",
+    id: "f2",
+    subject: "Reasoning",
+    title: "Reasoning Free Test",
+    description: "Challenge your logic with a sample reasoning paper.",
+    icon: Brain,
+    image: REASONING_IMG,
+  },
+  {
+    id: "f3",
+    subject: "English",
+    title: "English Free Test",
+    description: "Assess reading and writing skills with our sample test.",
     icon: BookOpen,
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10",
-    category: "Humanities",
-    difficulty: "Beginner",
-    duration: "8 Weeks",
-    instructor: "Prof. Jane Austen"
+    image: ENGLISH_IMG,
+  },
+];
+
+const PAID_BUNDLES = [
+  {
+    id: "p1",
+    subject: "Mathematics",
+    title: "Maths Practice Pack A",
+    description: "5 Full-length mock exams with detailed solutions.",
+    price: "$49",
+    icon: Calculator,
+    iconBg: "bg-[#6366F1]/15",
+    iconColor: "text-[#6366F1]",
+    badgeBg: "bg-[#6366F1]",
+    image: MATHS_IMG,
   },
   {
-    id: 3,
-    title: "Critical Thinking",
-    description: "Learn how to construct, deconstruct, and evaluate complex arguments.",
-    icon: BrainCircuit,
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
-    category: "Philosophy",
-    difficulty: "Intermediate",
-    duration: "6 Weeks",
-    instructor: "Dr. Socrates"
+    id: "p2",
+    subject: "Mathematics",
+    title: "Maths Practice Pack B",
+    description: "5 Advanced mock exams for extra practice.",
+    price: "$49",
+    icon: Calculator,
+    iconBg: "bg-[#6366F1]/15",
+    iconColor: "text-[#6366F1]",
+    badgeBg: "bg-[#6366F1]",
+    image: MATHS_IMG,
   },
   {
-    id: 4,
-    title: "Web Development Bootcamp",
-    description: "From HTML to advanced React. Build fully functional web applications.",
-    icon: Code,
-    color: "text-orange-500",
-    bg: "bg-orange-500/10",
-    category: "Technology",
-    difficulty: "Beginner",
-    duration: "16 Weeks",
-    instructor: "Ada Lovelace"
+    id: "p3",
+    subject: "Reasoning",
+    title: "Reasoning Practice Pack A",
+    description: "Comprehensive reasoning practice tests.",
+    price: "$49",
+    icon: Brain,
+    iconBg: "bg-[#8B5CF6]/15",
+    iconColor: "text-[#8B5CF6]",
+    badgeBg: "bg-[#8B5CF6]",
+    image: REASONING_IMG,
   },
   {
-    id: 5,
-    title: "Global Economics",
-    description: "Understand the financial systems that drive our modern globalized world.",
-    icon: Globe,
-    color: "text-indigo-500",
-    bg: "bg-indigo-500/10",
-    category: "Social Sciences",
-    difficulty: "Intermediate",
-    duration: "10 Weeks",
-    instructor: "Adam Smith"
+    id: "p4",
+    subject: "Reasoning",
+    title: "Reasoning Practice Pack B",
+    description: "Advanced reasoning challenges.",
+    price: "$49",
+    icon: Brain,
+    iconBg: "bg-[#8B5CF6]/15",
+    iconColor: "text-[#8B5CF6]",
+    badgeBg: "bg-[#8B5CF6]",
+    image: REASONING_IMG,
   },
   {
-    id: 6,
-    title: "Organic Chemistry",
-    description: "Dive deep into molecular structures and chemical reactions.",
-    icon: Beaker,
-    color: "text-rose-500",
-    bg: "bg-rose-500/10",
-    category: "Science",
-    difficulty: "Advanced",
-    duration: "14 Weeks",
-    instructor: "Marie Curie"
-  }
+    id: "p5",
+    subject: "English",
+    title: "English Practice Pack A",
+    description: "Reading comprehension and language skills.",
+    price: "$49",
+    icon: BookOpen,
+    iconBg: "bg-[#14B8A6]/15",
+    iconColor: "text-[#14B8A6]",
+    badgeBg: "bg-[#14B8A6]",
+    image: ENGLISH_IMG,
+  },
+  {
+    id: "p6",
+    subject: "English",
+    title: "English Practice Pack B",
+    description: "Advanced literature and writing practice.",
+    price: "$49",
+    icon: BookOpen,
+    iconBg: "bg-[#14B8A6]/15",
+    iconColor: "text-[#14B8A6]",
+    badgeBg: "bg-[#14B8A6]",
+    image: ENGLISH_IMG,
+  },
 ];
 
 export default function CoursesPage() {
   const [selectedSubject, setSelectedSubject] = useState("All");
-  const [selectedDifficulty, setSelectedDifficulty] = useState("All");
 
-  const filteredCourses = ALL_COURSES.filter(course => {
-    return (selectedSubject === "All" || course.category === selectedSubject) &&
-           (selectedDifficulty === "All" || course.difficulty === selectedDifficulty);
+  const filteredPaid = PAID_BUNDLES.filter(course => {
+    return selectedSubject === "All" || selectedSubject === "FREE" || course.subject === selectedSubject;
+  });
+
+  const filteredFree = FREE_TESTS.filter(course => {
+    return selectedSubject === "All" || selectedSubject === "FREE" || course.subject === selectedSubject;
   });
 
   return (
-    <div className="min-h-screen pt-[80px] bg-[--background]">
+    <div className="min-h-screen pt-[80px] bg-[--bg-base]">
       {/* Hero */}
-      <div className="h-[220px] md:h-[300px] flex flex-col items-center justify-center bg-[--alt-bg] border-b border-[--accent] text-center px-4 relative overflow-hidden">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[--primary] animate-[fade-in-up_0.5s_ease-out] mb-4">
-          Our Courses
+      <div className="h-[220px] md:h-[300px] flex flex-col items-center justify-center bg-[--surface] border-b border-[--border-color] text-center px-4">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[--text-heading] mb-4">
+          Choose Your Test Bundle
         </h1>
-        <p className="text-lg text-[--secondary] max-w-2xl animate-[fade-in-up_0.7s_ease-out]">
-          Expand your horizons with our expertly crafted curricula designed to challenge and inspire.
+        <p className="text-lg text-[--text-body] max-w-2xl">
+          Practice bundles designed to match school learning — with timed tests and clear performance insights.
         </p>
       </div>
 
-      <div className="container mx-auto px-4 md:px-8 py-12 lg:py-20 flex flex-col lg:flex-row gap-8 lg:gap-12">
-        {/* Sidebar Filters (Desktop) / Dropdown (Mobile) */}
-        <aside className="w-full lg:w-1/4 shrink-0">
-          <div className="bg-[--background] p-6 lg:p-8 rounded-3xl border border-[--accent] sticky top-32 shadow-sm">
-            <h3 className="font-serif font-bold text-xl text-[--primary] mb-8">Filter Courses</h3>
+      <div className="container mx-auto px-4 md:px-8 py-10 flex flex-col lg:flex-row gap-8">
+        {/* Sidebar Filter */}
+        <aside className="w-full lg:w-[280px] shrink-0">
+          <div className="bg-[--surface] p-6 rounded-2xl border border-[--border-color] shadow-sm sticky top-32">
+            <h3 className="font-serif font-bold text-xl text-[--text-heading] mb-6">Filter Tests</h3>
             
-            {/* Subject Filter */}
-            <div className="mb-6">
-              <label className="block text-xs font-bold text-[--secondary] mb-3 uppercase tracking-wider">Subject</label>
-              <select 
-                className="w-full p-3.5 bg-[--alt-bg] dark:bg-[--alt-bg] border-2 border-transparent rounded-xl outline-none focus:border-[--cta] transition-colors appearance-none cursor-pointer font-medium"
-                value={selectedSubject}
-                onChange={(e) => setSelectedSubject(e.target.value)}
-              >
-                <option value="All" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">All Subjects</option>
-                <option value="Math" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Math</option>
-                <option value="Humanities" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Humanities</option>
-                <option value="Philosophy" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Philosophy</option>
-                <option value="Technology" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Technology</option>
-                <option value="Social Sciences" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Social Sciences</option>
-                <option value="Science" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Science</option>
-              </select>
-            </div>
-
-            {/* Difficulty Filter */}
-            <div>
-              <label className="block text-xs font-bold text-[--secondary] mb-3 uppercase tracking-wider">Difficulty</label>
-              <select 
-                className="w-full p-3.5 bg-[--alt-bg] dark:bg-[--alt-bg] border-2 border-transparent rounded-xl outline-none focus:border-[--cta] transition-colors appearance-none cursor-pointer font-medium"
-                value={selectedDifficulty}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
-              >
-                <option value="All" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">All Levels</option>
-                <option value="Beginner" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Beginner</option>
-                <option value="Intermediate" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Intermediate</option>
-                <option value="Advanced" className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">Advanced</option>
-              </select>
-            </div>
-            
-            {(selectedSubject !== "All" || selectedDifficulty !== "All") && (
+            <div className="flex flex-col gap-2">
               <button 
-                onClick={() => { setSelectedSubject("All"); setSelectedDifficulty("All"); }}
-                className="w-full mt-6 py-2.5 text-sm font-semibold text-[--cta] hover:bg-[--cta]/10 rounded-lg transition-colors"
+                onClick={() => setSelectedSubject("All")}
+                className={`text-left px-4 py-2.5 rounded-xl font-medium transition-colors ${selectedSubject === "All" ? "bg-[--section-alt] text-[--text-heading]" : "text-[--text-body] hover:bg-[--section-alt]"}`}
               >
-                Clear Filters
+                All Subjects
               </button>
-            )}
+              <button 
+                onClick={() => setSelectedSubject("FREE")}
+                className={`text-left px-4 py-2.5 rounded-full font-semibold transition-colors ${selectedSubject === "FREE" ? "bg-[#6366F1] text-white" : "bg-[#6366F1]/10 text-[#6366F1] hover:bg-[#6366F1]/20"}`}
+              >
+                FREE Tests
+              </button>
+              <button 
+                onClick={() => setSelectedSubject("Mathematics")}
+                className={`text-left px-4 py-2.5 rounded-xl font-medium transition-colors ${selectedSubject === "Mathematics" ? "bg-[--section-alt] text-[--text-heading]" : "text-[--text-body] hover:bg-[--section-alt]"}`}
+              >
+                Mathematics
+              </button>
+              <button 
+                onClick={() => setSelectedSubject("Reasoning")}
+                className={`text-left px-4 py-2.5 rounded-xl font-medium transition-colors ${selectedSubject === "Reasoning" ? "bg-[--section-alt] text-[--text-heading]" : "text-[--text-body] hover:bg-[--section-alt]"}`}
+              >
+                Reasoning
+              </button>
+              <button 
+                onClick={() => setSelectedSubject("English")}
+                className={`text-left px-4 py-2.5 rounded-xl font-medium transition-colors ${selectedSubject === "English" ? "bg-[--section-alt] text-[--text-heading]" : "text-[--text-body] hover:bg-[--section-alt]"}`}
+              >
+                English
+              </button>
+            </div>
           </div>
         </aside>
 
-        {/* Content Grid */}
-        <div className="w-full lg:w-3/4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-            {filteredCourses.length === 0 ? (
-              <div className="col-span-full py-16 text-center text-[--secondary] bg-[--alt-bg] rounded-3xl border border-[--accent]">
-                <BookOpen size={48} className="mx-auto mb-4 opacity-50" />
-                <p className="text-xl font-medium">No courses found matching your filters.</p>
-                <button 
-                  onClick={() => { setSelectedSubject("All"); setSelectedDifficulty("All"); }}
-                  className="mt-4 text-[--cta] font-bold hover:underline"
-                >
-                  Clear all filters
-                </button>
+        {/* Content Area */}
+        <div className="w-full lg:flex-1">
+          
+          {/* Section 1: Free Tests */}
+          {(selectedSubject === "All" || selectedSubject === "FREE" || filteredFree.length > 0) && (
+            <div className="mb-16">
+              <div className="mb-8">
+                <h2 className="text-3xl font-serif font-bold text-[--text-heading] mb-2">Start with a Free Test</h2>
+                <p className="text-[--text-muted]">See how the tests work before choosing a bundle.</p>
               </div>
-            ) : (
-              filteredCourses.map((course) => {
-                const Icon = course.icon;
-                return (
-                  <div 
-                    key={course.id}
-                    className="bg-[--background] border border-[--accent] rounded-3xl p-6 sm:p-8 flex flex-col transition-all duration-200 hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(11,44,53,0.1)] dark:hover:shadow-[0_10px_30px_rgba(23,184,213,0.1)] group relative overflow-hidden"
-                  >
-                    <div className="flex justify-between items-start mb-8">
-                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${course.bg} ${course.color} transition-transform duration-300 group-hover:scale-110`}>
-                        <Icon size={28} />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredFree.map((course) => {
+                  return (
+                    <div key={course.id} className="relative bg-[--surface] border-2 border-[#6366F1] rounded-2xl flex flex-col min-h-[320px] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md overflow-hidden">
+                      <div className="absolute top-3 left-3 z-10">
+                        <span className="bg-[#6366F1] text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide shadow-sm">FREE</span>
                       </div>
-                      <span className="px-3 py-1 rounded-full bg-[--alt-bg] text-[--primary] text-[11px] font-bold uppercase tracking-wider mt-1">
-                        {course.difficulty}
-                      </span>
+                      
+                      <div className="w-full h-44 relative">
+                        <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
+                      </div>
+                      
+                      <div className="p-6 flex flex-col flex-grow">
+                        <h3 className="text-xl font-serif font-bold text-[--text-heading] mb-2">{course.title}</h3>
+                        <p className="text-[--text-body] text-sm mb-6 flex-grow">{course.description}</p>
+                        
+                        <button className="w-full py-2 rounded-full bg-[#6366F1] text-white font-medium hover:bg-indigo-600 transition-colors">
+                          Start Free Test →
+                        </button>
+                      </div>
                     </div>
-                    
-                    <h3 className="text-[22px] font-serif font-bold text-[--primary] mb-3 leading-snug">
-                      {course.title}
-                    </h3>
-                    <p className="text-[16px] text-[--secondary] mb-8 flex-grow leading-relaxed">
-                      {course.description}
-                    </p>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
-                    <div className="flex items-center justify-between text-sm text-[--secondary] font-medium mb-8 pt-5 border-t border-[--accent]">
-                      <div className="flex items-center gap-2.5">
-                        <User size={16} className="text-[--cta]" />
-                        <span>{course.instructor}</span>
+          {/* Section 2: Paid Bundles */}
+          {selectedSubject !== "FREE" && (
+            <div>
+              <div className="mb-8">
+                <h2 className="text-3xl font-serif font-bold text-[--text-heading] mb-2">Choose a Test Bundle</h2>
+                <p className="text-[--text-muted]">Practice bundles designed to match school learning — with timed tests and clear performance insights.</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {filteredPaid.map((course) => {
+                  const Icon = course.icon;
+                  return (
+                    <div key={course.id} className="bg-[--surface] rounded-2xl border border-[--border-color] shadow-sm flex flex-row overflow-hidden transition-all duration-200 hover:-translate-y-[3px] hover:shadow-md min-h-[220px]">
+                      
+                      {/* Image Left */}
+                      <div className="w-2/5 relative h-full min-h-[220px]">
+                        <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
                       </div>
-                      <div className="flex items-center gap-2.5">
-                        <Clock size={16} className="text-[--cta]" />
-                        <span>{course.duration}</span>
+                      
+                      {/* Content Right */}
+                      <div className="w-3/5 p-5 flex flex-col relative">
+                        <div className="absolute top-5 right-5">
+                          <span className={`${course.badgeBg} text-white text-xs font-semibold px-2.5 py-0.5 rounded-full`}>{course.subject}</span>
+                        </div>
+
+                        <div className={`w-10 h-10 rounded-xl ${course.iconBg} flex items-center justify-center ${course.iconColor} mb-3`}>
+                          <Icon size={20} />
+                        </div>
+                        
+                        <h3 className="text-xl font-serif font-bold text-[--text-heading] mb-2 pr-16">{course.title}</h3>
+                        
+                        <div className="flex items-center gap-3 text-[--text-muted] text-sm mb-3">
+                          <div className="flex items-center gap-1.5"><FileText size={14} /> <span>5 Tests</span></div>
+                          <span className="w-1 h-1 rounded-full bg-[--text-muted]/40"></span>
+                          <div className="flex items-center gap-1.5"><GraduationCap size={14} /> <span>Year 6</span></div>
+                        </div>
+
+                        <div className="border-b border-[--border-color] my-3"></div>
+                        
+                        <p className="text-[--text-body] text-sm line-clamp-2 mb-4 flex-grow">{course.description}</p>
+                        
+                        <button className="text-[#14B8A6] font-medium text-sm hover:underline self-start mt-auto flex items-center gap-1">
+                          View Bundle →
+                        </button>
                       </div>
                     </div>
-                    
-                    <button className="mt-auto flex items-center justify-center space-x-2 w-full py-3.5 rounded-xl bg-[--alt-bg] text-[--cta] font-bold transition-all duration-200 group-hover:bg-[--cta] group-hover:text-white shadow-sm group-hover:shadow-md active:scale-95">
-                      <span>Explore Course</span>
-                      <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </div>
-                );
-              })
-            )}
-          </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          
         </div>
       </div>
     </div>

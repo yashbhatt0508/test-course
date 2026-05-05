@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import SmoothScroll from "@/components/SmoothScroll";
+import { Inter, Fraunces } from "next/font/google";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import InitialLoader from "@/components/InitialLoader";
@@ -12,9 +10,9 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const playfair = Playfair_Display({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-fraunces",
 });
 
 export const metadata: Metadata = {
@@ -29,18 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${playfair.variable} antialiased min-h-screen flex flex-col`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <InitialLoader />
-          <SmoothScroll>
-            {/* The layout is flexible so Footer stays at the bottom */}
-            <Navigation />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </SmoothScroll>
-        </ThemeProvider>
+      <body className={`${inter.variable} ${fraunces.variable} font-sans antialiased min-h-screen flex flex-col`}>
+        <InitialLoader />
+        {/* The layout is flexible so Footer stays at the bottom */}
+        <Navigation />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

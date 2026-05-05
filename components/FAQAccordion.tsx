@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const FAQS = [
@@ -20,44 +19,24 @@ const CATEGORIES = ["All", "General", "Courses", "Billing", "Technical"];
 
 export default function FAQAccordion() {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [openId, setOpenId] = useState<number | null>(null);
 
   const filteredFaqs = FAQS.filter(faq => {
-    const matchesCategory = activeCategory === "All" || faq.category === activeCategory;
-    const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return activeCategory === "All" || faq.category === activeCategory;
   });
 
   return (
     <div className="w-full max-w-4xl mx-auto py-16 px-4">
-      {/* Search Bar */}
-      <div className="relative mb-10 w-full max-w-lg mx-auto group">
-        <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-[--secondary] transition-colors group-focus-within:text-[--cta]">
-          <Search size={22} />
-        </div>
-        <input
-          type="text"
-          placeholder="Search for answers..."
-          className="w-full pl-14 pr-4 py-4 bg-[--alt-bg] border-2 border-[--accent] focus:border-[--cta] focus:bg-[--background] rounded-xl text-[--primary] transition-all duration-300 outline-none shadow-sm placeholder-[--secondary]"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        {/* Animated bottom border focus effect */}
-        <div className="absolute bottom-[-2px] left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[--cta] transition-all duration-300 group-focus-within:w-full rounded-b-xl" />
-      </div>
-
+      
       {/* Tabs Desktop & Dropdown Mobile */}
       <div className="mb-14">
         <div className="md:hidden mb-6">
           <select 
-            className="w-full p-4 bg-[--alt-bg] dark:bg-[--alt-bg] border border-[--accent] rounded-xl outline-none font-medium appearance-none cursor-pointer"
+            className="w-full p-4 bg-white border border-[#E2E8F0] rounded-xl outline-none font-medium appearance-none cursor-pointer text-[#0F172A]"
             value={activeCategory}
             onChange={(e) => setActiveCategory(e.target.value)}
           >
             {CATEGORIES.map(cat => (
-              <option key={cat} value={cat} className="bg-white text-black dark:bg-[#0A1F26] dark:text-white">
+              <option key={cat} value={cat}>
                 {cat}
               </option>
             ))}
@@ -71,8 +50,8 @@ export default function FAQAccordion() {
               className={cn(
                 "px-6 py-2.5 rounded-full font-medium transition-all duration-300",
                 activeCategory === cat 
-                  ? "bg-[--cta] text-white shadow-md scale-105" 
-                  : "bg-[--alt-bg] text-[--secondary] hover:bg-[--accent] hover:text-[--primary]"
+                  ? "bg-[#6366F1] text-white shadow-md scale-105" 
+                  : "bg-[#F1F5F9] text-[#64748B] hover:bg-[#E2E8F0] hover:text-[#0F172A]"
               )}
             >
               {cat}
@@ -81,13 +60,13 @@ export default function FAQAccordion() {
         </div>
       </div>
 
-      {/* Accordion */}
-      <div className="space-y-4">
-        <AnimatePresence>
+      {/* FAQ List (Flat Layout) */}
+      <div className="space-y-0">
+        <AnimatePresence mode="popLayout">
           {filteredFaqs.length === 0 ? (
             <motion.p 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="text-center text-[--secondary] py-10"
+              className="text-center text-[#64748B] py-10"
             >
               No FAQs found matching your criteria.
             </motion.p>
@@ -98,41 +77,16 @@ export default function FAQAccordion() {
                 layout
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className={cn(
-                  "border rounded-2xl overflow-hidden transition-all duration-300",
-                  openId === faq.id ? "border-[--cta] bg-[--background] shadow-[0_4px_20px_rgba(14,116,144,0.1)] dark:shadow-[0_4px_20px_rgba(23,184,213,0.1)]" : "border-[--accent] bg-[--alt-bg] hover:border-[--cta]/50"
-                )}
+                className="py-6 border-b border-[#E2E8F0] last:border-b-0"
               >
-                <button
-                  className="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none"
-                  onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
-                >
-                  <span className="font-serif font-bold text-lg lg:text-xl text-[--primary] pr-8">{faq.question}</span>
-                  <ChevronDown 
-                    size={24} 
-                    className={cn(
-                      "shrink-0 text-[--cta] transition-transform duration-300",
-                      openId === faq.id ? "rotate-180" : "rotate-0"
-                    )} 
-                  />
-                </button>
-                
-                <AnimatePresence>
-                  {openId === faq.id && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                      <div className="px-6 pb-6 text-[--secondary] leading-relaxed border-t border-[--accent] pt-4 mt-2">
-                        {faq.answer}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <h3 className="font-serif font-semibold text-xl text-[#0F172A] mb-3">
+                  {faq.question}
+                </h3>
+                <p className="text-[#334155] leading-relaxed">
+                  {faq.answer}
+                </p>
               </motion.div>
             ))
           )}
@@ -147,10 +101,10 @@ export default function FAQAccordion() {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="mt-20 text-center"
       >
-        <div className="inline-flex flex-col items-center p-10 bg-[--alt-bg] rounded-3xl border border-[--accent] shadow-sm">
-          <h3 className="text-2xl font-serif font-bold text-[--primary] mb-3">Still can't find the answer?</h3>
-          <p className="text-[--secondary] mb-8 font-medium">Our support team is ready to assist you 24/7.</p>
-          <a href="/contact" className="px-8 py-3.5 bg-[--cta] hover:bg-[--cta-hover] text-white rounded-full font-bold transition-all duration-200 hover:shadow-xl hover:scale-105 active:scale-95">
+        <div className="inline-flex flex-col items-center p-10 bg-[#F1F5F9] rounded-3xl border border-[#E2E8F0] shadow-sm">
+          <h3 className="text-2xl font-serif font-bold text-[#0F172A] mb-3">Still can't find the answer?</h3>
+          <p className="text-[#334155] mb-8 font-medium">Our support team is ready to assist you.</p>
+          <a href="/contact" className="px-8 py-3.5 bg-[#6366F1] hover:bg-indigo-600 text-white rounded-full font-bold transition-all duration-200 hover:shadow-md hover:scale-[1.02]">
             Contact Support
           </a>
         </div>

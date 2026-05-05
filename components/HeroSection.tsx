@@ -1,77 +1,69 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
-const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=1974&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop",
-];
+const HERO_IMAGE = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop";
 
 export default function HeroSection() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
-    }, 5000); // 5 seconds interval
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background Images Layer */}
-      {HERO_IMAGES.map((src, index) => (
+      {/* Background Image Layer */}
+      <div className="absolute inset-0 z-0">
         <div
-          key={src}
-          className={`absolute inset-0 transition-opacity duration-[800ms] ease-in-out ${index === currentImageIndex ? "opacity-100 z-0" : "opacity-0 -z-10"
-            }`}
-        >
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${src})` }}
-          />
-        </div>
-      ))}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${HERO_IMAGE})` }}
+        />
+      </div>
 
-      {/* Dark Overlay for max text visibility */}
-      <div className="absolute inset-0 bg-black/75 dark:bg-black/65 z-10" />
-      {/* Bottom fade to blend with the next section seamlessly */}
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[--background] to-transparent z-10" />
+      {/* Dark Overlay for text visibility */}
+      <div className="absolute inset-0 bg-black/40 z-10" />
+      {/* Subtle dark gradient at bottom for text contrast */}
+      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black/60 to-transparent z-10" />
 
       {/* Content */}
       <div className="container relative z-20 mx-auto px-4 md:px-8 text-center flex flex-col items-center">
-        <div className="max-w-4xl mx-auto space-y-8 animate-[fade-in-up_1s_ease-out]">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="max-w-4xl mx-auto space-y-8"
+        >
 
-          <span className="inline-block py-1.5 px-4 rounded-full bg-[--cta] dark:bg-[--accent] text-[#D9F3F0] dark:text-[--cta] text-sm font-semibold tracking-wide uppercase shadow-sm">
-            Elevate Your Journey
+          <span className="inline-block py-1 px-4 rounded-full bg-white/20 text-white backdrop-blur-sm text-[11px] font-bold uppercase tracking-wider border border-white/30 shadow-sm">
+            Aligned with Australian curriculum standards
           </span>
 
-          <h1 className="text-5xl md:text-7xl font-serif font-bold text-white leading-tight drop-shadow-2xl">
-            Master Your Future With <span className="text-[--cta] brightness-125 saturate-150 drop-shadow-2xl">EduCraft</span>
+          <h1 className="text-5xl md:text-7xl font-serif font-bold text-white leading-tight drop-shadow-md">
+            Help your child feel<br />
+            <span className="text-indigo-300">confident with EduAid</span>
           </h1>
 
-          <p className="text-lg md:text-2xl text-neutral-200 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-xl">
-            Unlock premium, interactive learning experiences carefully designed to take your critical skills to the next dimension.
+          <p className="text-lg md:text-xl text-gray-100 max-w-xl mx-auto font-medium leading-relaxed drop-shadow">
+            Improve confidence, strengthen core subjects, and track real progress<br />
+            all in one place.
           </p>
 
-          <div className="pt-8">
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-5">
             <Link
-              href="#courses"
-              className="group relative inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-full bg-[--cta] text-[#D9F3F0] dark:text-[--background] font-semibold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:bg-cyan-800 dark:hover:bg-[--cta-hover] hover:shadow-[0_0_20px_var(--cta)]"
+              href="/courses?filter=FREE"
+              className="relative inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#6366F1] text-white font-semibold text-base transition-transform duration-200 hover:scale-[1.02] shadow-[0_0_20px_rgba(99,102,241,0.5)]"
             >
-              <span>Start Learning</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              {/* Shine effect */}
-              <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+              {/* Pulse Ring */}
+              <span className="absolute inset-0 rounded-full animate-[pulse-ring_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"></span>
+              <span className="relative z-10">Start with a Free Test</span>
+            </Link>
+
+            <Link
+              href="/courses"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/40 text-white font-semibold text-base transition-all duration-200 hover:scale-[1.02] hover:bg-white/20"
+            >
+              Explore Test Series
             </Link>
           </div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );
