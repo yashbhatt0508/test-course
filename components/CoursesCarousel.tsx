@@ -1,6 +1,6 @@
 "use client";
 
-import { Calculator, BookOpen, BrainCircuit } from "lucide-react";
+import { Calculator, BookOpen, Brain } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -8,88 +8,89 @@ const COURSES = [
   {
     id: 1,
     title: "Mathematics",
-    description: "Core concepts aligned with school curriculum.",
+    description: "Core numerical skills and curriculum-aligned mathematical mastery.",
     icon: Calculator,
-    bandColor: "bg-[#6366F1]",
-    textColor: "text-[#6366F1]",
+    accent: "#16A34A",
+    bgTint: "bg-[#F0FDF4]",
+    borderColor: "border-[#BBF7D0]",
+    shadowHover: "hover:shadow-[0_10px_30px_rgba(22,163,74,0.15)]",
+    iconColor: "text-[#16A34A]",
   },
   {
     id: 2,
-    title: "English",
-    description: "Enhance reading comprehension and writing skills.",
+    title: "Reading Skills",
+    description: "Comprehension, vocabulary, and critical reading confidence.",
     icon: BookOpen,
-    bandColor: "bg-[#14B8A6]",
-    textColor: "text-[#14B8A6]",
+    accent: "#EA580C",
+    bgTint: "bg-[#FFF7ED]",
+    borderColor: "border-[#FED7AA]",
+    shadowHover: "hover:shadow-[0_10px_30px_rgba(234,88,12,0.15)]",
+    iconColor: "text-[#EA580C]",
   },
   {
     id: 3,
     title: "Reasoning",
-    description: "Develop strong analytical and logical thinking.",
-    icon: BrainCircuit,
-    bandColor: "bg-[#818CF8]",
-    textColor: "text-[#818CF8]",
+    description: "Sharp logical thinking, analytical reasoning, and problem-solving.",
+    icon: Brain,
+    accent: "#6366F1",
+    bgTint: "bg-[#EEF2FF]",
+    borderColor: "border-[#C7D2FE]",
+    shadowHover: "hover:shadow-[0_10px_30px_rgba(99,102,241,0.15)]",
+    iconColor: "text-[#6366F1]",
   },
 ];
 
 export default function CoursesCarousel() {
   return (
-    <section id="courses" className="py-24 bg-[#F8FAFC]">
+    <section id="courses" className="py-24 bg-white relative z-10">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="text-center mb-16 max-w-3xl mx-auto">
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-serif font-bold text-[#0F172A] mb-6"
-          >
-            What Your Child Will Practice
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-[#334155] text-lg"
-          >
-            Focused practice in Mathematics, Reasoning, and English — aligned with school learning, with timed tests and detailed performance insights.
-          </motion.p>
+        
+        {/* Header */}
+        <div className="text-center mb-16 max-w-2xl mx-auto flex flex-col items-center">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-[#0F172A] mb-6">
+            What Your Child Will Master
+          </h2>
+          <p className="text-[#334155] text-lg font-sans leading-relaxed">
+            Structured learning across Mathematics, English, and Reasoning — with timed
+            tests, detailed performance insights, and targeted practice designed to build confidence
+            and measurable academic growth.
+          </p>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Feature Showcase Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {COURSES.map((course) => {
             const Icon = course.icon;
             return (
               <div
                 key={course.id}
-                className="group relative bg-white rounded-2xl border border-[#E2E8F0] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md flex flex-col"
+                className={`group relative bg-white rounded-2xl border ${course.borderColor} p-8 transition-all duration-300 hover:-translate-y-1 ${course.shadowHover} flex flex-col items-start`}
               >
-                {/* Top colored band */}
-                <div className={`h-2 w-full rounded-t-2xl ${course.bandColor}`} />
-                
-                <div className="p-6 flex flex-col h-full">
-                  <div className={`w-12 h-12 mb-5 rounded-xl bg-opacity-10 flex items-center justify-center ${course.textColor} bg-current`}>
-                    <Icon size={24} className="opacity-100" />
-                  </div>
-
-                  <h3 className="text-2xl font-serif font-semibold text-[#0F172A] mb-3">
-                    {course.title}
-                  </h3>
-
-                  <p className="text-[#334155] mb-6 flex-grow">
-                    {course.description}
-                  </p>
-
-                  <Link 
-                    href={`/courses?subject=${course.title}`}
-                    className="mt-auto text-[#6366F1] font-semibold flex items-center gap-1 group-hover:text-indigo-700 transition-colors"
-                  >
-                    View Tests <span className="transform transition-transform group-hover:translate-x-1">→</span>
-                  </Link>
+                {/* Icon Box */}
+                <div className={`w-14 h-14 rounded-xl ${course.bgTint} flex items-center justify-center ${course.iconColor} mb-6 transition-transform group-hover:scale-110`}>
+                  <Icon size={28} strokeWidth={2} />
                 </div>
+
+                <h3 className="text-2xl font-serif font-bold text-[#0F172A] mb-3">
+                  {course.title}
+                </h3>
+
+                <p className="text-[#334155] font-sans text-base leading-relaxed">
+                  {course.description}
+                </p>
               </div>
             );
           })}
+        </div>
+
+        {/* View All Button */}
+        <div className="flex justify-center">
+          <Link
+            href="/courses"
+            className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-[#6366F1] text-white font-serif font-medium text-lg transition-transform duration-200 hover:scale-[1.02] hover:bg-indigo-600 shadow-md"
+          >
+            View All Test Bundles →
+          </Link>
         </div>
 
       </div>

@@ -1,69 +1,94 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { Shield } from "lucide-react";
 import { motion } from "framer-motion";
 
-const HERO_IMAGE = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop";
+const HERO_IMAGE = "/1.jpeg";
 
 export default function HeroSection() {
+  const scrollToNext = () => {
+    const nextSection = document.getElementById('courses');
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background Image Layer */}
-      <div className="absolute inset-0 z-0">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${HERO_IMAGE})` }}
-        />
-      </div>
+    <section className="relative min-h-screen pt-28 pb-20 md:pt-32 md:pb-24 overflow-hidden bg-[#F8FAFC]">
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+          
+          {/* Left Side: Image (40-45%) */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full md:w-[45%] h-[500px] md:h-[650px] relative rounded-2xl overflow-hidden shrink-0"
+          >
+            <Image 
+              src={HERO_IMAGE}
+              alt="Children studying"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 45vw"
+              priority
+            />
+          </motion.div>
 
-      {/* Dark Overlay for text visibility */}
-      <div className="absolute inset-0 bg-black/40 z-10" />
-      {/* Subtle dark gradient at bottom for text contrast */}
-      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black/60 to-transparent z-10" />
+          {/* Right Side: Text (55-60%) */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+            className="w-full md:w-[55%] flex flex-col items-start"
+          >
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white border border-[#E2E8F0] shadow-sm mb-8">
+              <Shield size={16} className="text-[#64748B]" />
+              <span className="text-[#64748B] text-sm font-medium">
+                Aligned with Australian Curriculum
+              </span>
+            </div>
 
-      {/* Content */}
-      <div className="container relative z-20 mx-auto px-4 md:px-8 text-center flex flex-col items-center">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-4xl mx-auto space-y-8"
-        >
+            {/* Heading */}
+            <h1 className="text-5xl md:text-6xl mb-6 leading-[1.1]">
+              <span className="font-fraunces font-bold not-italic text-[#0F172A]">
+                Help Your Child Build Academic{' '}
+              </span>
+              <br className="hidden md:block" />
+              <span className="font-fraunces font-bold italic text-[#6366F1]">
+                Confidence
+              </span>
+            </h1>
 
-          <span className="inline-block py-1 px-4 rounded-full bg-white/20 text-white backdrop-blur-sm text-[11px] font-bold uppercase tracking-wider border border-white/30 shadow-sm">
-            Aligned with Australian curriculum standards
-          </span>
+            {/* Subheading */}
+            <p className="text-[#334155] text-lg font-sans max-w-lg mb-10 leading-relaxed">
+              Personalised assessments, targeted practice, and measurable progress tracking
+              to strengthen Maths, Reasoning and Reading skills.
+            </p>
 
-          <h1 className="text-5xl md:text-7xl font-serif font-bold text-white leading-tight drop-shadow-md">
-            Help your child feel<br />
-            <span className="text-indigo-300">confident with EduAid</span>
-          </h1>
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              <Link
+                href="/courses?filter=FREE"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-xl bg-[#6366F1] text-white font-semibold text-base transition-transform duration-200 hover:scale-[1.02]"
+                style={{ boxShadow: '0 0 18px #6366F140' }}
+              >
+                Try Free Assessment →
+              </Link>
 
-          <p className="text-lg md:text-xl text-gray-100 max-w-xl mx-auto font-medium leading-relaxed drop-shadow">
-            Improve confidence, strengthen core subjects, and track real progress<br />
-            all in one place.
-          </p>
+              <button
+                onClick={scrollToNext}
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-xl border border-[#6366F1] text-[#6366F1] bg-transparent font-semibold text-base transition-colors duration-200 hover:bg-[#6366F1]/5"
+              >
+                Learn More
+              </button>
+            </div>
+          </motion.div>
 
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-5">
-            <Link
-              href="/courses?filter=FREE"
-              className="relative inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#6366F1] text-white font-semibold text-base transition-transform duration-200 hover:scale-[1.02] shadow-[0_0_20px_rgba(99,102,241,0.5)]"
-            >
-              {/* Pulse Ring */}
-              <span className="absolute inset-0 rounded-full animate-[pulse-ring_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"></span>
-              <span className="relative z-10">Start with a Free Test</span>
-            </Link>
-
-            <Link
-              href="/courses"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/40 text-white font-semibold text-base transition-all duration-200 hover:scale-[1.02] hover:bg-white/20"
-            >
-              Explore Test Series
-            </Link>
-          </div>
-
-        </motion.div>
+        </div>
       </div>
     </section>
   );

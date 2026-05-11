@@ -27,31 +27,18 @@ export default function FAQAccordion() {
   return (
     <div className="w-full max-w-4xl mx-auto py-16 px-4">
       
-      {/* Tabs Desktop & Dropdown Mobile */}
+      {/* Tabs Filter Bar */}
       <div className="mb-14">
-        <div className="md:hidden mb-6">
-          <select 
-            className="w-full p-4 bg-white border border-[#E2E8F0] rounded-xl outline-none font-medium appearance-none cursor-pointer text-[#0F172A]"
-            value={activeCategory}
-            onChange={(e) => setActiveCategory(e.target.value)}
-          >
-            {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="hidden md:flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
               className={cn(
-                "px-6 py-2.5 rounded-full font-medium transition-all duration-300",
+                "px-5 py-2.5 rounded-xl font-sans font-medium transition-colors",
                 activeCategory === cat 
-                  ? "bg-[#6366F1] text-white shadow-md scale-105" 
-                  : "bg-[#F1F5F9] text-[#64748B] hover:bg-[#E2E8F0] hover:text-[#0F172A]"
+                  ? "bg-[#6366F1] text-white" 
+                  : "bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]"
               )}
             >
               {cat}
@@ -66,7 +53,7 @@ export default function FAQAccordion() {
           {filteredFaqs.length === 0 ? (
             <motion.p 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="text-center text-[#64748B] py-10"
+              className="text-center text-[#64748B] py-10 font-sans"
             >
               No FAQs found matching your criteria.
             </motion.p>
@@ -84,7 +71,7 @@ export default function FAQAccordion() {
                 <h3 className="font-serif font-semibold text-xl text-[#0F172A] mb-3">
                   {faq.question}
                 </h3>
-                <p className="text-[#334155] leading-relaxed">
+                <p className="text-[#334155] leading-relaxed font-sans text-sm">
                   {faq.answer}
                 </p>
               </motion.div>
@@ -103,8 +90,8 @@ export default function FAQAccordion() {
       >
         <div className="inline-flex flex-col items-center p-10 bg-[#F1F5F9] rounded-3xl border border-[#E2E8F0] shadow-sm">
           <h3 className="text-2xl font-serif font-bold text-[#0F172A] mb-3">Still can't find the answer?</h3>
-          <p className="text-[#334155] mb-8 font-medium">Our support team is ready to assist you.</p>
-          <a href="/contact" className="px-8 py-3.5 bg-[#6366F1] hover:bg-indigo-600 text-white rounded-full font-bold transition-all duration-200 hover:shadow-md hover:scale-[1.02]">
+          <p className="text-[#334155] mb-8 font-sans font-medium">Our support team is ready to assist you.</p>
+          <a href="/contact" className="px-8 py-3.5 bg-[#6366F1] hover:bg-indigo-600 text-white rounded-xl font-medium transition-all duration-200 hover:shadow-md hover:scale-[1.02]">
             Contact Support
           </a>
         </div>

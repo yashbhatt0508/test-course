@@ -10,7 +10,7 @@
   --color-primary: var(--primary);
   --color-accent: var(--accent);
   --color-highlight: var(--highlight);
-  --color-border-color: var(--border-color); /* Note: using border-color instead of border to avoid conflicts in TW */
+  --color-border-color: var(--border-color);
   
   --font-inter: var(--font-inter);
   --font-fraunces: var(--font-fraunces);
@@ -43,7 +43,7 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-serif);
+    font-family: var(--font-fraunces), serif;
     color: var(--text-heading);
   }
 }

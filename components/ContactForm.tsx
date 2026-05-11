@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Loader2, Send, ChevronDown } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const contactSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  firstName: z.string().min(2, "First name is required"),
+  lastName: z.string().min(2, "Last name is required"),
   email: z.string().email("Please enter a valid email address"),
-  subject: z.string().min(1, "Please select a subject"),
   message: z.string().min(10, "Message must be at least 10 characters long"),
 });
 
@@ -32,13 +32,10 @@ export default function ContactForm() {
 
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
-    // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsSubmitting(false);
     setIsSuccess(true);
     reset();
-    
-    // Hide success message after 5 seconds
     setTimeout(() => setIsSuccess(false), 5000);
   };
 
@@ -59,129 +56,101 @@ export default function ContactForm() {
         )}
       </AnimatePresence>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 bg-white p-6 sm:p-8 rounded-2xl border border-[#E2E8F0] shadow-sm relative z-0">
+      <form 
+        onSubmit={handleSubmit(onSubmit)} 
+        className="bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-2xl p-8 shadow-sm flex flex-col gap-5"
+      >
         
-        {/* Name Input */}
-        <div className="flex flex-col gap-1.5 text-[#0F172A] focus-within:text-[#6366F1]">
-          <label htmlFor="name" className="text-sm font-semibold">
-            Full Name
-          </label>
-          <input
-            {...register("name")}
-            id="name"
-            type="text"
-            className={cn(
-              "w-full px-4 py-3 bg-[#F8FAFC] rounded-xl border outline-none transition-all duration-300",
-              errors.name ? "border-red-500/50 focus:border-red-500" : "border-[#E2E8F0] focus:border-[#6366F1]"
-            )}
-            placeholder="John Doe"
-          />
-          <AnimatePresence>
-            {errors.name && (
-              <motion.p initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="text-red-500 text-xs mt-1 font-medium flex items-center gap-1">
-                <span className="w-1 h-1 rounded-full bg-red-500" /> {errors.name.message}
-              </motion.p>
-            )}
-          </AnimatePresence>
+        {/* Row 1: First Name & Last Name */}
+        <div className="flex flex-col sm:flex-row gap-4 w-full">
+          <div className="flex flex-col w-full sm:w-1/2">
+            <label htmlFor="firstName" className="font-inter text-sm font-medium text-[#334155] mb-1">
+              First Name
+            </label>
+            <input
+              {...register("firstName")}
+              id="firstName"
+              type="text"
+              placeholder="Enter your first name..."
+              className={cn(
+                "w-full rounded-xl border bg-[#F8FAFC] px-4 py-3 text-sm font-inter focus:outline-none focus:ring-1 transition-all duration-200 placeholder:text-[#94A3B8]",
+                errors.firstName ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-[#E2E8F0] focus:border-[#6366F1] focus:ring-[#6366F1]"
+              )}
+            />
+            {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
+          </div>
+
+          <div className="flex flex-col w-full sm:w-1/2">
+            <label htmlFor="lastName" className="font-inter text-sm font-medium text-[#334155] mb-1">
+              Last Name
+            </label>
+            <input
+              {...register("lastName")}
+              id="lastName"
+              type="text"
+              placeholder="Enter your last name..."
+              className={cn(
+                "w-full rounded-xl border bg-[#F8FAFC] px-4 py-3 text-sm font-inter focus:outline-none focus:ring-1 transition-all duration-200 placeholder:text-[#94A3B8]",
+                errors.lastName ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-[#E2E8F0] focus:border-[#6366F1] focus:ring-[#6366F1]"
+              )}
+            />
+            {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
+          </div>
         </div>
 
-        {/* Email Input */}
-        <div className="flex flex-col gap-1.5 text-[#0F172A] focus-within:text-[#6366F1]">
-          <label htmlFor="email" className="text-sm font-semibold">
-            Email Address
+        {/* Row 2: Email */}
+        <div className="flex flex-col w-full">
+          <label htmlFor="email" className="font-inter text-sm font-medium text-[#334155] mb-1">
+            Email
           </label>
           <input
             {...register("email")}
             id="email"
             type="email"
+            placeholder="Enter your email address..."
             className={cn(
-              "w-full px-4 py-3 bg-[#F8FAFC] rounded-xl border outline-none transition-all duration-300",
-              errors.email ? "border-red-500/50 focus:border-red-500" : "border-[#E2E8F0] focus:border-[#6366F1]"
+              "w-full rounded-xl border bg-[#F8FAFC] px-4 py-3 text-sm font-inter focus:outline-none focus:ring-1 transition-all duration-200 placeholder:text-[#94A3B8]",
+              errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-[#E2E8F0] focus:border-[#6366F1] focus:ring-[#6366F1]"
             )}
-            placeholder="john@example.com"
           />
-          <AnimatePresence>
-            {errors.email && (
-              <motion.p initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="text-red-500 text-xs mt-1 font-medium flex items-center gap-1">
-                <span className="w-1 h-1 rounded-full bg-red-500" /> {errors.email.message}
-              </motion.p>
-            )}
-          </AnimatePresence>
+          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </div>
 
-        {/* Subject Select */}
-        <div className="flex flex-col gap-1.5 text-[#0F172A] focus-within:text-[#6366F1]">
-          <label htmlFor="subject" className="text-sm font-semibold">
-            Subject
-          </label>
-          <div className="relative">
-            <select
-              {...register("subject")}
-              id="subject"
-              className={cn(
-                "w-full px-4 py-3 bg-[#F8FAFC] rounded-xl border outline-none transition-all duration-300 font-medium appearance-none",
-                errors.subject ? "border-red-500/50 focus:border-red-500" : "border-[#E2E8F0] focus:border-[#6366F1]"
-              )}
-              defaultValue=""
-            >
-              <option value="" disabled hidden>Select a Subject</option>
-              <option value="enrollment">Course Enrollment</option>
-              <option value="support">Technical Support</option>
-              <option value="billing">Billing Inquiry</option>
-              <option value="other">Other Inquiry</option>
-            </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#64748B]">
-              <ChevronDown size={20} />
-            </div>
-          </div>
-          <AnimatePresence>
-            {errors.subject && (
-              <motion.p initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="text-red-500 text-xs mt-1 font-medium flex items-center gap-1">
-                <span className="w-1 h-1 rounded-full bg-red-500" /> {errors.subject.message}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Message Textarea */}
-        <div className="flex flex-col gap-1.5 text-[#0F172A] focus-within:text-[#6366F1]">
-          <label htmlFor="message" className="text-sm font-semibold">
-            Your Message
+        {/* Row 3: Message */}
+        <div className="flex flex-col w-full">
+          <label htmlFor="message" className="font-inter text-sm font-medium text-[#334155] mb-1">
+            How can we help you?
           </label>
           <textarea
             {...register("message")}
             id="message"
-            rows={4}
+            rows={6}
+            placeholder="Enter your message..."
             className={cn(
-              "w-full px-4 py-3 bg-[#F8FAFC] rounded-xl border outline-none transition-all duration-300 resize-none",
-              errors.message ? "border-red-500/50 focus:border-red-500" : "border-[#E2E8F0] focus:border-[#6366F1]"
+              "w-full rounded-xl border bg-[#F8FAFC] px-4 py-3 text-sm font-inter focus:outline-none focus:ring-1 transition-all duration-200 resize-none placeholder:text-[#94A3B8]",
+              errors.message ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-[#E2E8F0] focus:border-[#6366F1] focus:ring-[#6366F1]"
             )}
-            placeholder="Type your message here..."
           />
-          <AnimatePresence>
-            {errors.message && (
-              <motion.p initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="text-red-500 text-xs mt-1 font-medium flex items-center gap-1">
-                <span className="w-1 h-1 rounded-full bg-red-500" /> {errors.message.message}
-              </motion.p>
-            )}
-          </AnimatePresence>
+          {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
         </div>
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full mt-2 py-3 bg-[#6366F1] hover:bg-indigo-600 text-white rounded-full font-bold flex items-center justify-center gap-2 transition-transform duration-200 disabled:opacity-70 disabled:cursor-not-allowed hover:scale-[1.01]"
-        >
-          {isSubmitting ? (
-            <Loader2 className="animate-spin" size={20} />
-          ) : (
-            <>
-              Send Message
-              <Send size={18} className="translate-y-[1px] ml-1" />
-            </>
-          )}
-        </button>
+        <div className="flex justify-end w-full mt-2">
+          <motion.button
+            type="submit"
+            disabled={isSubmitting}
+            whileTap={{ scale: 1.04 }}
+            transition={{ duration: 0.15 }}
+            className="bg-[#6366F1] text-white rounded-xl px-6 py-2.5 text-sm font-medium hover:bg-[#4F46E5] transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
+          >
+            {isSubmitting ? (
+              <Loader2 className="animate-spin" size={18} />
+            ) : (
+              "Send Message →"
+            )}
+          </motion.button>
+        </div>
+        
       </form>
     </div>
   );
