@@ -19,7 +19,7 @@ export const LegalSection = ({ title, children, id }: { title: string; children:
 export const LegalPageLayout = ({ title, children, toc }: { title: string; children: React.ReactNode; toc?: React.ReactNode }) => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] pt-[120px] pb-24">
-      
+
       {/* Hero Header */}
       <div className="mb-16 text-center">
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#0F172A] tracking-tight">
@@ -29,11 +29,11 @@ export const LegalPageLayout = ({ title, children, toc }: { title: string; child
 
       {/* Main Content Area */}
       <div className="container mx-auto px-4 md:px-8 max-w-5xl flex flex-col lg:flex-row gap-16 items-start">
-        
+
         {/* Table of Contents Wrapper */}
         {toc && (
           <aside className="w-full lg:w-1/4 lg:sticky lg:top-32 shrink-0">
-             {toc}
+            {toc}
           </aside>
         )}
 
@@ -43,8 +43,11 @@ export const LegalPageLayout = ({ title, children, toc }: { title: string; child
             {children}
           </div>
         </div>
-        
+
       </div>
     </div>
   );
 };
+
+
+

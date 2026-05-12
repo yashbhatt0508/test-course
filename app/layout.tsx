@@ -3,6 +3,7 @@ import { Inter, Fraunces } from "next/font/google";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import InitialLoader from "@/components/InitialLoader";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,14 +30,44 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${fraunces.variable} ${inter.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('theme');
+                  if (!stored || stored === 'system') {
+                    localStorage.setItem('theme', 'light');
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  } else if (stored === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="font-inter antialiased min-h-screen flex flex-col">
-        <InitialLoader />
-        {/* The layout is flexible so Footer stays at the bottom */}
-        <Navigation />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <InitialLoader />
+          {/* The layout is flexible so Footer stays at the bottom */}
+          <Navigation />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
